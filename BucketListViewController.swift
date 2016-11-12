@@ -35,13 +35,18 @@ class BucketLIstControllerTableViewController: UITableViewController, CancelButt
         
         if sender is UITableViewCell{
             if let indexPath = tableView.indexPath(for: sender as! UITableViewCell) {
-                controller.missionToEdit = missions[indexPath.row]
+//                print("indexPath:\(indexPath)")
+//                print("indexPath:\(indexPath.row)")
+//                print("indexPath:\(context[indexPath.row])")
+//                print(missionsTwo[indexPath.row].details!)
+                // this is the text, used to populate the label
+                controller.missionToEdit = missionsTwo[indexPath.row].details
+                // this is the index in our array of that mission object, for use in the controller
                 controller.missionToEditIndexPath = indexPath.row
             }
         }
     }
-    
-    // ---------------------- CRUDs
+
     
     // Create
     func missionDetailsViewController(controller: MissionDetailsViewController, didFinishAddingMission mission: String) {
