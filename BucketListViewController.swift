@@ -24,7 +24,7 @@ class BucketLIstControllerTableViewController: UITableViewController, CancelButt
     }
     
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        
+        // both when accy icon and '+' buttons are pushed
         let navigationController = segue.destination as! UINavigationController
         let controller = navigationController.topViewController as! MissionDetailsViewController
         controller.cancelButtonDelegate = self
@@ -77,7 +77,6 @@ class BucketLIstControllerTableViewController: UITableViewController, CancelButt
     }
     // Update
     func missionDetailsViewController(controller: MissionDetailsViewController, didFinishEditingMission mission: String, atIndexPath indexPath: Int){
-        
         missions = retrieval()
         dismiss(animated: true, completion: nil)
         missions[indexPath].details = mission
@@ -86,7 +85,6 @@ class BucketLIstControllerTableViewController: UITableViewController, CancelButt
     }
     // Delete
     override func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCellEditingStyle, forRowAt indexPath: IndexPath) {
-        
         context.delete(missions[indexPath.row])
         contextSave()
         // refresh local data
