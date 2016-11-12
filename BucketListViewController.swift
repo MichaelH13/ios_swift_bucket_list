@@ -53,7 +53,8 @@ class BucketLIstControllerTableViewController: UITableViewController, CancelButt
         dismiss(animated: true, completion: nil)
         // create the mission object
         let saveableMission = Mission(context: context)
-        // the string that is passed in for saving
+        // give your new object's 'details' property
+        // the string that is passed in as 'mission'
         saveableMission.details = mission
         // save
         contextSave()
