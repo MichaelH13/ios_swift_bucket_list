@@ -11,8 +11,7 @@ import CoreData
 
 class BucketLIstControllerTableViewController: UITableViewController, CancelButtonDelegate, MissionDetailsViewControllerDelegate {
     
-    var missions = ["Missinog","dkdkdk"]
-    var missionsTwo = [Mission]()
+    var missions = [Mission]()
     
     let context = (UIApplication.shared.delegate as! AppDelegate).persistentContainer.viewContext
     
@@ -39,25 +38,28 @@ class BucketLIstControllerTableViewController: UITableViewController, CancelButt
 //                print("indexPath:\(indexPath.row)")
 //                print("indexPath:\(context[indexPath.row])")
 //                print(missionsTwo[indexPath.row].details!)
+                
                 // this is the text, used to populate the label
-                controller.missionToEdit = missionsTwo[indexPath.row].details
+                controller.missionToEdit = missions[indexPath.row].details
                 // this is the index in our array of that mission object, for use in the controller
                 controller.missionToEditIndexPath = indexPath.row
             }
         }
     }
 
-    
     // Create
     func missionDetailsViewController(controller: MissionDetailsViewController, didFinishAddingMission mission: String) {
+        // remove the view
         dismiss(animated: true, completion: nil)
-        
-        missions.append(mission)
-        
+        // create the mission object
         let saveableMission = Mission(context: context)
+        // the string that is passed in for saving
         saveableMission.details = mission
+        // save
         contextSave()
-        
+        // sync with database
+        missions = retrieval()
+        // show updated data
         tableView.reloadData()
     }
     // Read
@@ -75,25 +77,20 @@ class BucketLIstControllerTableViewController: UITableViewController, CancelButt
     // Update
     func missionDetailsViewController(controller: MissionDetailsViewController, didFinishEditingMission mission: String, atIndexPath indexPath: Int){
         
-        missionsTwo = retrieval()
-        
+        missions = retrieval()
         dismiss(animated: true, completion: nil)
-        
-        missions[indexPath] = mission
-        missionsTwo[indexPath].details = mission
+        missions[indexPath].details = mission
         contextSave()
-        
         tableView.reloadData()
     }
     // Delete
     override func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCellEditingStyle, forRowAt indexPath: IndexPath) {
         
-        missions.remove(at: indexPath.row)
-        
-        // del
-        context.delete(missionsTwo[indexPath.row])
+        context.delete(missions[indexPath.row])
         contextSave()
-        
+        // refresh local data
+        missions = retrieval()
+        // show updated data
         tableView.reloadData()
     }
     // Save to Database
@@ -108,13 +105,9 @@ class BucketLIstControllerTableViewController: UITableViewController, CancelButt
 
     override func viewDidLoad() {
         super.viewDidLoad()
+        // get your initial local copy of the data
+        missions = retrieval()
         
-        missionsTwo = retrieval()
-        
-        missions = []
-        for mission in missionsTwo {
-            missions.append(mission.details!)
-        }
     }
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
@@ -133,7 +126,7 @@ class BucketLIstControllerTableViewController: UITableViewController, CancelButt
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "cell", for: indexPath)
 
-        cell.textLabel?.text = missions[indexPath.row]
+        cell.textLabel?.text = missions[indexPath.row].details
         return cell
     }
 
